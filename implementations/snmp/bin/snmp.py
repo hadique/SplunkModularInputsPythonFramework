@@ -13,6 +13,7 @@ import time
 SPLUNK_HOME = os.environ.get("SPLUNK_HOME")
 sys.path.append(SPLUNK_HOME + "/etc/apps/snmp_ta/bin/pyasn1-0.1.6-py2.7.egg")
 sys.path.append(SPLUNK_HOME + "/etc/apps/snmp_ta/bin/pysnmp-4.2.4-py2.7.egg")
+sys.path.append(SPLUNK_HOME + "/etc/apps/snmp_ta/bin/pysnmp_mibs-0.1.4-py2.7.egg")
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 
 #set up logging

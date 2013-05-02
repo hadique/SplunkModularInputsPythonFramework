@@ -49,6 +49,7 @@ SCHEME = """<scheme>
             <arg name="port">
                 <title>Port</title>
                 <description>The SNMP port. Defaults to 161</description>
+                <validation>is_port('port'), "value for port must be a positive integer"</validation>
                 <required_on_edit>false</required_on_edit>
                 <required_on_create>false</required_on_create>
             </arg>
@@ -102,7 +103,7 @@ def do_run():
     mib=config.get("mib","SNMPv2-MIB")
     oid=config.get("oid","sysDescr")
     snmpindex=config.get("snmpindex",0)
-    communitystring=config.get("communitystring")
+    communitystring=config.get("communitystring", "public")
     snmpinterval=config.get("snmpinterval",60)     
     
     while True:      
@@ -113,6 +114,7 @@ def do_run():
                 cmdgen.CommunityData(communitystring),
                 cmdgen.UdpTransportTarget((destination, port)),
                 cmdgen.MibVariable(mib, oid, snmpindex),
+                '.1.3.6.1.2.1.1.3.0',
                 lookupNames=True, lookupValues=True
             )
             if errorIndication:
@@ -125,7 +127,7 @@ def do_run():
                 splunkevent =""
                 
                 for name, val in varBinds:
-                    splunkevent += '%s = "%s" ,' % (name.prettyPrint(), val.prettyPrint())
+                    splunkevent += '%s = "%s", ' % (name.prettyPrint(), val.prettyPrint())
                     
                 print_xml_single_instance_mode(splunkevent)
                 sys.stdout.flush()
@@ -156,7 +158,7 @@ def print_simple(s):
     
 def usage():
     print "usage: %s [--scheme|--validate-arguments]"
-    logging.error("Incorrect Program usaae")
+    logging.error("Incorrect Program Usage")
     sys.exit(2)
 
 def do_scheme():
